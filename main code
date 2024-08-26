@@ -1,0 +1,33 @@
+from PIL import Image
+import pytesseract
+import cv2
+
+
+if __name__ == '__main__':
+    ret, frame = 0,0
+    c=0
+
+    cap = cv2.VideoCapture('p4-90hz.mp4')
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
+    while True:
+        ret, frame = cap.read()  #逐幀取圖
+        if not ret:
+            print("Cannot receive frame")
+            break
+        if (c % 25==0):  #每25幀取1張
+            tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+            pytesseract.pytesseract.tesseract_cmd =tesseract_cmd
+            #img= cv2.resize(ratate_img, (1920, 1080), interpolation=cv2.INTER_CUBIC)
+
+            #img = cv2.imread(r"D:\coding\Garmain_word_detection\test3.png")
+            text = pytesseract.image_to_string(frame)
+
+            print(text)
+            cv2.imshow("img",frame)
+            cv2.waitKey(1)
+        c=c+1    
+    cap.release()
+    cv2.destroyAllWindows()
+
