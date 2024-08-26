@@ -1,0 +1,18 @@
+from PIL import Image
+import pytesseract
+import cv2
+
+tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+pytesseract.pytesseract.tesseract_cmd =tesseract_cmd
+"""
+image_to_string()：如果识别英文或数字可以不必额外参数，如果识别其他语言则需要加上lang参数
+lang='chi_sim'表示要识别的是中文简体
+没有识别出来时，返回空白
+"""
+
+img = cv2.imread(r"D:\coding\Garmain_word_detection\test4.png")
+text = pytesseract.image_to_string(img)
+
+print(text)
+cv2.imshow("img",img)
+cv2.waitKey(0)
