@@ -1,0 +1,45 @@
+from PIL import Image
+import pytesseract
+import cv2
+import numpy as np
+
+
+if __name__ == '__main__':
+    ret, frame = 0,0
+    c=0
+
+    cap = cv2.VideoCapture('y4 - Converted with FlexClip.mp4')
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
+    while True:
+        ret, frame = cap.read()  #逐幀取圖
+        if not ret:
+            print("Cannot receive frame")
+            break
+        if (c % 15==0):  #每25幀取1張
+            tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+            pytesseract.pytesseract.tesseract_cmd =tesseract_cmd
+
+            img = frame[0:500, 0:1600]                #resize
+            output = img * (200/127 + 1) - 200        #對比度增強    #img * (contrast/127 + 1) - contrast + brightness 轉換公式
+            output = np.clip(output, 0, 255)          # 調整後的數值大多為浮點數，且可能會小於 0 或大於 255
+            output = np.uint8(output)                 # 為了保持像素色彩區間為 0～255 的整數，所以再使用 np.clip() 和 np.uint8() 進行轉換
+
+            gray = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY); #轉灰階
+            ret, result = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY)     # 如果大於 127 就等於 255，反之等於 0。
+            
+
+            #img = cv2.imread(r"D:\coding\Garmain_word_detection\test3.png")
+            text = pytesseract.image_to_string(result)
+
+            print(text)
+            with open("test.txt","a+",encoding="utf-8") as f:
+                f.write(text)
+            #cv2.imshow("org",frame)
+            cv2.imshow("img",result)
+            cv2.waitKey(2)
+        c=c+1
+    f.close()
+    cap.release()
+    cv2.destroyAllWindows()
