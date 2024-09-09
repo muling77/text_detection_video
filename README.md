@@ -2,7 +2,7 @@
 code1：辨識圖片內文字  
 code2：影片依特定幀數讀取圖片，進行文字辨識
 
-使用的環境:  
+PATH:  
 Python 3.9.7 and 3.12.5  
 opencv-contrib-python 4.10.0.84  
 opencv-python         4.10.0.84  
